@@ -1,9 +1,9 @@
 # Copyright (c) 2020 The ZMK Contributors
 # SPDX-License-Identifier: MIT
 
-description: Keyboard Reset Behavior
+description: Macro
 
-compatible: "zmk,behavior-simple-macro"
+compatible: "zmk,behavior-macro"
 
 include: zero_param.yaml
 
@@ -16,7 +16,7 @@ properties:
     default: 10
   mode:
     type: string
-    default: "key-down"
+    default: "hold"
     enum:
       - "key-up"
       - "key-down"
