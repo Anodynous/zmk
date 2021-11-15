@@ -189,6 +189,14 @@ endif
 #Split Support
 endmenu
 
+menu "Stenography Support"
+
+config ZMK_PLOVER_HID
+  bool "Support for the Plover HID Stenography Protocol"
+
+# Stenography Support
+endmenu
+
 #Basic Keyboard Setup
 endmenu
 
@@ -264,14 +272,11 @@ config ZMK_SLEEP
 
 if ZMK_SLEEP
 
-config SYS_POWER_DEEP_SLEEP_STATES
-	default y
-
 choice SYS_PM_POLICY
-	default SYS_PM_POLICY_APP
+	default PM_POLICY_APP
 endchoice
 
-config DEVICE_POWER_MANAGEMENT
+config PM_DEVICE
 	default y
 
 config ZMK_IDLE_SLEEP_TIMEOUT
@@ -335,6 +340,7 @@ menu "KSCAN Settings"
 config ZMK_KSCAN_EVENT_QUEUE_SIZE
 	int "Size of the event queue for KSCAN events to buffer events"
 	default 4
+  default 64 if ZMK_PLOVER_HID
 
 config ZMK_KSCAN_MOCK_DRIVER
 	bool "Enable mock kscan driver to simulate key presses"
@@ -422,6 +428,11 @@ config ZMK_WPM
 
 config SENSOR
 	default y
+
+choice CBPRINTF_IMPLEMENTATION
+	default CBPRINTF_NANO
+
+endchoice
 
 module = ZMK
 module-str = zmk

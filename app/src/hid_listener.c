@@ -35,6 +35,15 @@ static int hid_listener_keycode_pressed(const struct zmk_keycode_state_changed *
             return err;
         }
         break;
+    // FIXME: we shouldn't and off the usage page here, we should use the whole
+    // page number
+    case HID_USAGE_VENDOR_PLOVER & 0xFF:
+        err = zmk_hid_plover_press(ev->keycode);
+        if (err) {
+            LOG_ERR("Unable to press keycode");
+            return err;
+        }
+        break;
     }
     zmk_hid_register_mods(ev->explicit_modifiers);
     zmk_hid_implicit_modifiers_press(ev->implicit_modifiers);
@@ -57,6 +66,14 @@ static int hid_listener_keycode_released(const struct zmk_keycode_state_changed 
         err = zmk_hid_consumer_release(ev->keycode);
         if (err) {
             LOG_ERR("Unable to release keycode");
+            return err;
+        }
+    // FIXME: we shouldn't and off the usage page here, we should use the whole
+    // page number
+    case HID_USAGE_VENDOR_PLOVER & 0xFF:
+        err = zmk_hid_plover_release(ev->keycode);
+        if (err) {
+            LOG_ERR("Unable to press keycode");
             return err;
         }
     }
