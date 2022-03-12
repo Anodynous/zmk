@@ -48,16 +48,16 @@ shield to get it picked up for ZMK, `Kconfig.shield` and `Kconfig.defconfig`.
 
 ### Kconfig.shield
 
-The `Kconfig.shield` file defines any additional Kconfig settings that may be relevant when using this keyboard. For most keyboards, there is just one additional configuration value for the shield itself, e.g.:
+The `Kconfig.shield` file defines any additional Kconfig settings that may be relevant when using this keyboard. For most keyboards, there is just one additional configuration value for the shield itself.
 
 ```
 config SHIELD_MY_BOARD
 	def_bool $(shields_list_contains,my_board)
 ```
 
-This will make sure the new configuration `SHIELD_MY_BOARD` is set to true whenever `my_board` is added as a shield in your build.
+This will make sure that a new configuration value named `SHIELD_MY_BOARD` is set to true whenever `my_board` is used as the shield name, either as the `SHIELD` variable [in a local build](build-flash.md) or in your `build.yaml` file [when using Github Actions](../customization). Note that this configuration value will be used in `Kconfig.defconfig` to set other properties about your shield, so make sure that they match.
 
-**For split boards**, you will need to add configurations for the left and right sides.
+**For split boards**, you will need to add configurations for the left and right sides. For example, if your split halves are named `my_board_left` and `my_board_right`, it would look like this:
 
 ```
 config SHIELD_MY_BOARD_LEFT
@@ -84,7 +84,7 @@ Do not make the keyboard name too long, otherwise the bluetooth advertising migh
 if SHIELD_MY_BOARD
 
 config ZMK_KEYBOARD_NAME
-	default "My Awesome Keyboard"
+	default "My Board"
 
 endif
 ```
@@ -98,17 +98,10 @@ Finally, you'll want to turn on the split option for both sides. This can all be
 if SHIELD_MY_BOARD_LEFT
 
 config ZMK_KEYBOARD_NAME
-	default "My Awesome Keyboard Left"
+	default "My Board"
 
 config ZMK_SPLIT_BLE_ROLE_CENTRAL
 	default y
-
-endif
-
-if SHIELD_MY_BOARD_RIGHT
-
-config ZMK_KEYBOARD_NAME
-	default "My Awesome Keyboard Right"
 
 endif
 
@@ -124,7 +117,7 @@ endif
 
 ![Labelled Pro Micro pins](../assets/pro-micro/pro-micro-pins-labelled.jpg)
 
-ZMK uses the green color coded pin names to generate devicetree node references. For example, to refer to the node `D0` in the devicetree files, use `&pro_micro_d 0` or to refer to `A1`, use `&pro_micro_a 1`.
+ZMK uses the blue color coded pin names to generate devicetree node references. For example, to refer to the node `0` in the devicetree files, use `&pro_micro 0`.
 
 <Tabs
 defaultValue="unibody"
@@ -150,15 +143,15 @@ this might look something like:
         diode-direction = "col2row";
 
         col-gpios
-            = <&pro_micro_d 15 GPIO_ACTIVE_HIGH>
-            , <&pro_micro_d 14 GPIO_ACTIVE_HIGH>
-            , <&pro_micro_d 16 GPIO_ACTIVE_HIGH>
+            = <&pro_micro 15 GPIO_ACTIVE_HIGH>
+            , <&pro_micro 14 GPIO_ACTIVE_HIGH>
+            , <&pro_micro 16 GPIO_ACTIVE_HIGH>
             ;
 
 		row-gpios
-			= <&pro_micro_a 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-			, <&pro_micro_a 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
-            , <&pro_micro_a 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+			= <&pro_micro 19 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+			, <&pro_micro 20 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&pro_micro 21 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
 			;
 	};
 };
@@ -207,11 +200,11 @@ RC(3,0) RC(3,1) RC(3,2) RC(3,3) RC(3,4) RC(3,5) RC(4,2) RC(4,9) RC(3,6) RC(3,7) 
 
 		diode-direction = "col2row";
 		row-gpios
-			= <&pro_micro_d 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Row A from the schematic file
-			, <&pro_micro_d 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Row B from the schematic file
-			, <&pro_micro_d 8 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Row C from the schematic file
-			, <&pro_micro_d 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Row D from the schematic file
-			, <&pro_micro_d 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Row E from the schematic file
+			= <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Row A from the schematic file
+			, <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Row B from the schematic file
+			, <&pro_micro 8 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Row C from the schematic file
+			, <&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Row D from the schematic file
+			, <&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)> // Row E from the schematic file
 			;
 
 	};
@@ -235,12 +228,12 @@ This is exemplified with the iris .overlay files.
 
 &kscan0 {
 	col-gpios
-		= <&pro_micro_a 1 GPIO_ACTIVE_HIGH> // col1 in the schematic
-		, <&pro_micro_a 0 GPIO_ACTIVE_HIGH> // col2 in the schematic
-		, <&pro_micro_d 15 GPIO_ACTIVE_HIGH> // col3 in the schematic
-		, <&pro_micro_d 14 GPIO_ACTIVE_HIGH> // col4 in the schematic
-		, <&pro_micro_d 16 GPIO_ACTIVE_HIGH> // col5 in the schematic
-		, <&pro_micro_d 10 GPIO_ACTIVE_HIGH> // col6 in the schematic
+		= <&pro_micro 19 GPIO_ACTIVE_HIGH> // col1 in the schematic
+		, <&pro_micro 18 GPIO_ACTIVE_HIGH> // col2 in the schematic
+		, <&pro_micro 15 GPIO_ACTIVE_HIGH> // col3 in the schematic
+		, <&pro_micro 14 GPIO_ACTIVE_HIGH> // col4 in the schematic
+		, <&pro_micro 16 GPIO_ACTIVE_HIGH> // col5 in the schematic
+		, <&pro_micro 10 GPIO_ACTIVE_HIGH> // col6 in the schematic
 		;
 };
 ```
@@ -256,12 +249,12 @@ This is exemplified with the iris .overlay files.
 
 &kscan0 {
 	col-gpios
-		= <&pro_micro_d 10 GPIO_ACTIVE_HIGH> // col6 in the schematic
-		, <&pro_micro_d 16 GPIO_ACTIVE_HIGH> // col5 in the schematic
-		, <&pro_micro_d 14 GPIO_ACTIVE_HIGH> // col4 in the schematic
-		, <&pro_micro_d 15 GPIO_ACTIVE_HIGH> // col3 in the schematic
-		, <&pro_micro_a 0 GPIO_ACTIVE_HIGH>  // col2 in the schematic
-		, <&pro_micro_a 1 GPIO_ACTIVE_HIGH>  // col1 in the schematic
+		= <&pro_micro 10 GPIO_ACTIVE_HIGH> // col6 in the schematic
+		, <&pro_micro 16 GPIO_ACTIVE_HIGH> // col5 in the schematic
+		, <&pro_micro 14 GPIO_ACTIVE_HIGH> // col4 in the schematic
+		, <&pro_micro 15 GPIO_ACTIVE_HIGH> // col3 in the schematic
+		, <&pro_micro 18 GPIO_ACTIVE_HIGH>  // col2 in the schematic
+		, <&pro_micro 19 GPIO_ACTIVE_HIGH>  // col1 in the schematic
 		;
 };
 
@@ -367,7 +360,7 @@ The two `#include` lines at the top of the keymap are required in order to bring
 Further documentation on behaviors and bindings is forthcoming, but a summary of the current behaviors you can bind to key positions is as follows:
 
 - `kp` is the "key press" behavior, and takes a single binding argument of the key code from the 'keyboard/keypad" HID usage table.
-- `mo` is the "momentary layer" behaviour, and takes a single binding argument of the numeric ID of the layer to momentarily enable when that key is held.
+- `mo` is the "momentary layer" behavior, and takes a single binding argument of the numeric ID of the layer to momentarily enable when that key is held.
 - `trans` is the "transparent" behavior, useful to be place in higher layers above `mo` bindings to be sure the key release is handled by the lower layer. No binding arguments are required.
 - `mt` is the "mod-tap" behavior, and takes two binding arguments, the modifier to use if held, and the keycode to send if tapped.
 
