@@ -158,6 +158,7 @@ static int send_plover_report() {
         return -ENOTSUP;
     }
 }
+#endif /* IS_ENABLED(CONFIG_ZMK_PLOVER_HID) */
 
 int zmk_endpoints_send_report(uint16_t usage_page) {
 
