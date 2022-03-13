@@ -131,6 +131,7 @@ static int send_consumer_report() {
     }
 }
 
+#if IS_ENABLED(CONFIG_ZMK_PLOVER_HID)
 static int send_plover_report() {
     struct zmk_hid_plover_report *plover_report = zmk_hid_get_plover_report();
     switch (current_endpoint) {
