@@ -358,6 +358,8 @@ struct zmk_hid_mouse_report_body {
 struct zmk_hid_mouse_report {
     uint8_t report_id;
     struct zmk_hid_mouse_report_body body;
+} __packed;
+
 struct zmk_hid_plover_report_body {
     uint8_t buttons[8]; // FIXME: don't hard code
 } __packed;
@@ -392,10 +394,6 @@ void zmk_hid_mouse_movement_update(int16_t x, int16_t y);
 void zmk_hid_mouse_scroll_update(int8_t x, int8_t y);
 void zmk_hid_mouse_clear();
 
-//Commented out by Anodynous, copied in with hid_plover_report lines
-//struct zmk_hid_keyboard_report *zmk_hid_get_keyboard_report();
-//struct zmk_hid_consumer_report *zmk_hid_get_consumer_report();
-//struct zmk_hid_mouse_report *zmk_hid_get_mouse_report();
 int zmk_hid_plover_press(zmk_key_t key);
 int zmk_hid_plover_release(zmk_key_t key);
 void zmk_hid_plover_clear();
@@ -403,6 +401,6 @@ void zmk_hid_plover_clear();
 struct zmk_hid_keyboard_report *zmk_hid_get_keyboard_report();
 struct zmk_hid_consumer_report *zmk_hid_get_consumer_report();
 
-struct zmk_hid_plover_report *zmk_hid_get_plover_report();
-//Anodynous added below zmk_hid_mouse_report which was commented out
 struct zmk_hid_mouse_report *zmk_hid_get_mouse_report();
+
+struct zmk_hid_plover_report *zmk_hid_get_plover_report();
