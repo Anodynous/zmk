@@ -296,6 +296,20 @@ static const uint8_t zmk_hid_report_desc[] = {
     HID_MI_COLLECTION_END,
     /* END COLLECTION */
     HID_MI_COLLECTION_END,
+#if IS_ENABLED(CONFIG_ZMK_PLOVER_HID)
+    0x06, 0x50, 0xff,              // UsagePage (65360)
+    0x0a, 0x56, 0x4c,              // Usage (19542)
+    0xa1, 0x02,                    // Collection (Logical)
+    0x85, 0x50,                    //     ReportID (80)
+    0x25, 0x01,                    //     LogicalMaximum (1)
+    0x75, 0x01,                    //     ReportSize (1)
+    0x95, 0x40,                    //     ReportCount (64)
+    0x05, 0x0a,                    //     UsagePage (ordinal)
+    0x19, 0x00,                    //     UsageMinimum (Ordinal(0))
+    0x29, 0x3f,                    //     UsageMaximum (Ordinal(63))
+    0x81, 0x02,                    //     Input (Variable)
+    0xc0,                          // EndCollection
+#endif /* IS_ENABLED(CONFIG_ZMK_PLOVER_HID) */
 };
 
 // struct zmk_hid_boot_report
@@ -333,6 +347,7 @@ struct zmk_hid_consumer_report {
     struct zmk_hid_consumer_report_body body;
 } __packed;
 
+<<<<<<< HEAD
 struct zmk_hid_mouse_report_body {
     zmk_mouse_button_flags_t buttons;
     int16_t x;
@@ -344,6 +359,15 @@ struct zmk_hid_mouse_report_body {
 struct zmk_hid_mouse_report {
     uint8_t report_id;
     struct zmk_hid_mouse_report_body body;
+=======
+struct zmk_hid_plover_report_body {
+    uint8_t buttons[8]; // FIXME: don't hard code
+} __packed;
+
+struct zmk_hid_plover_report {
+    uint8_t report_id;
+    struct zmk_hid_plover_report_body body;
+>>>>>>> dnaq/plover-hid-hog-attempt
 } __packed;
 
 zmk_mod_flags_t zmk_hid_get_explicit_mods();
@@ -361,6 +385,7 @@ int zmk_hid_consumer_press(zmk_key_t key);
 int zmk_hid_consumer_release(zmk_key_t key);
 void zmk_hid_consumer_clear();
 
+<<<<<<< HEAD
 int zmk_hid_mouse_button_press(zmk_mouse_button_t button);
 int zmk_hid_mouse_button_release(zmk_mouse_button_t button);
 int zmk_hid_mouse_buttons_press(zmk_mouse_button_flags_t buttons);
@@ -374,3 +399,13 @@ void zmk_hid_mouse_clear();
 struct zmk_hid_keyboard_report *zmk_hid_get_keyboard_report();
 struct zmk_hid_consumer_report *zmk_hid_get_consumer_report();
 struct zmk_hid_mouse_report *zmk_hid_get_mouse_report();
+=======
+int zmk_hid_plover_press(zmk_key_t key);
+int zmk_hid_plover_release(zmk_key_t key);
+void zmk_hid_plover_clear();
+
+struct zmk_hid_keyboard_report *zmk_hid_get_keyboard_report();
+struct zmk_hid_consumer_report *zmk_hid_get_consumer_report();
+
+struct zmk_hid_plover_report *zmk_hid_get_plover_report();
+>>>>>>> dnaq/plover-hid-hog-attempt
