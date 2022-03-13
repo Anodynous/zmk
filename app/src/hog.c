@@ -367,24 +367,6 @@ int zmk_hog_send_mouse_report(struct zmk_hid_mouse_report_body *report) {
         }
         default:
             LOG_WRN("Failed to queue mouse report to send (%d)", err);
-        bt_conn_unref(conn);
-    }
-}
-
-K_WORK_DEFINE(hog_plover_work, send_plover_report_callback);
-
-int zmk_hog_send_plover_report(struct zmk_hid_plover_report_body *report) {
-    int err = k_msgq_put(&zmk_hog_plover_msgq, report, K_MSEC(100));
-    if (err) {
-        switch (err) {
-        case -EAGAIN: {
-            LOG_WRN("Plover message queue full, popping first message and queueing again");
-            struct zmk_hid_plover_report_body discarded_report;
-            k_msgq_get(&zmk_hog_plover_msgq, &discarded_report, K_NO_WAIT);
-            return zmk_hog_send_plover_report(report);
-        }
-        default:
-            LOG_WRN("Failed to queue plover report to send (%d)", err);
             return err;
         }
     }
@@ -393,6 +375,8 @@ int zmk_hog_send_plover_report(struct zmk_hid_plover_report_body *report) {
 
     return 0;
 };
+
+K_WORK_DEFINE(hog_plover_work, send_plover_report_callback);
 
 int zmk_hog_send_mouse_report_direct(struct zmk_hid_mouse_report_body *report) {
     struct bt_conn *conn = destination_connection();
@@ -416,6 +400,23 @@ int zmk_hog_send_mouse_report_direct(struct zmk_hid_mouse_report_body *report) {
 
     return 0;
 };
+
+int zmk_hog_send_plover_report(struct zmk_hid_plover_report_body *report) {
+    int err = k_msgq_put(&zmk_hog_plover_msgq, report, K_MSEC(100));
+    if (err) {
+        switch (err) {
+        case -EAGAIN: {
+            LOG_WRN("Plover message queue full, popping first message and queueing again");
+            struct zmk_hid_plover_report_body discarded_report;
+            k_msgq_get(&zmk_hog_plover_msgq, &discarded_report, K_NO_WAIT);
+            return zmk_hog_send_plover_report(report);
+        }
+        default:
+            LOG_WRN("Failed to queue plover report to send (%d)", err);
+            return err;
+        }
+    }
+
     k_work_submit_to_queue(&hog_work_q, &hog_plover_work);
 
     return 0;
