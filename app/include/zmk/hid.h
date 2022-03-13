@@ -347,7 +347,6 @@ struct zmk_hid_consumer_report {
     struct zmk_hid_consumer_report_body body;
 } __packed;
 
-<<<<<<< HEAD
 struct zmk_hid_mouse_report_body {
     zmk_mouse_button_flags_t buttons;
     int16_t x;
@@ -359,7 +358,6 @@ struct zmk_hid_mouse_report_body {
 struct zmk_hid_mouse_report {
     uint8_t report_id;
     struct zmk_hid_mouse_report_body body;
-=======
 struct zmk_hid_plover_report_body {
     uint8_t buttons[8]; // FIXME: don't hard code
 } __packed;
@@ -367,7 +365,6 @@ struct zmk_hid_plover_report_body {
 struct zmk_hid_plover_report {
     uint8_t report_id;
     struct zmk_hid_plover_report_body body;
->>>>>>> dnaq/plover-hid-hog-attempt
 } __packed;
 
 zmk_mod_flags_t zmk_hid_get_explicit_mods();
@@ -385,7 +382,6 @@ int zmk_hid_consumer_press(zmk_key_t key);
 int zmk_hid_consumer_release(zmk_key_t key);
 void zmk_hid_consumer_clear();
 
-<<<<<<< HEAD
 int zmk_hid_mouse_button_press(zmk_mouse_button_t button);
 int zmk_hid_mouse_button_release(zmk_mouse_button_t button);
 int zmk_hid_mouse_buttons_press(zmk_mouse_button_flags_t buttons);
@@ -396,10 +392,10 @@ void zmk_hid_mouse_movement_update(int16_t x, int16_t y);
 void zmk_hid_mouse_scroll_update(int8_t x, int8_t y);
 void zmk_hid_mouse_clear();
 
-struct zmk_hid_keyboard_report *zmk_hid_get_keyboard_report();
-struct zmk_hid_consumer_report *zmk_hid_get_consumer_report();
-struct zmk_hid_mouse_report *zmk_hid_get_mouse_report();
-=======
+//Commented out by Anodynous, copied in with hid_plover_report lines
+//struct zmk_hid_keyboard_report *zmk_hid_get_keyboard_report();
+//struct zmk_hid_consumer_report *zmk_hid_get_consumer_report();
+//struct zmk_hid_mouse_report *zmk_hid_get_mouse_report();
 int zmk_hid_plover_press(zmk_key_t key);
 int zmk_hid_plover_release(zmk_key_t key);
 void zmk_hid_plover_clear();
@@ -408,4 +404,5 @@ struct zmk_hid_keyboard_report *zmk_hid_get_keyboard_report();
 struct zmk_hid_consumer_report *zmk_hid_get_consumer_report();
 
 struct zmk_hid_plover_report *zmk_hid_get_plover_report();
->>>>>>> dnaq/plover-hid-hog-attempt
+//Anodynous added below zmk_hid_mouse_report which was commented out
+struct zmk_hid_mouse_report *zmk_hid_get_mouse_report();
