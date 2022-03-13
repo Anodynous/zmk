@@ -304,8 +304,29 @@ K_MSGQ_DEFINE(zmk_hog_mouse_msgq, sizeof(struct zmk_hid_mouse_report_body),
 void send_mouse_report_callback(struct k_work *work) {
     struct zmk_hid_mouse_report_body report;
     while (k_msgq_get(&zmk_hog_mouse_msgq, &report, K_NO_WAIT) == 0) {
+        struct bt_conn *conn = destination_connection();
+        if (conn == NULL) {
+            return;
+        }
+
+        struct bt_gatt_notify_params notify_params = {
+            .attr = &hog_svc.attrs[13],
+            .data = &report,
+            .len = sizeof(report),
+        };
+
+        int err = bt_gatt_notify_cb(conn, &notify_params);
+        if (err) {
+            LOG_DBG("Error notifying %d", err);
+        }
+
+        bt_conn_unref(conn);
+    }
+};
+
+
 K_MSGQ_DEFINE(zmk_hog_plover_msgq, sizeof(struct zmk_hid_plover_report_body),
-              CONFIG_ZMK_BLE_CONSUMER_REPORT_QUEUE_SIZE, 4); // FIXME: this needs its own config option
+              CONFIG_ZMK_BLE_PLOVER_HID_REPORT_QUEUE_SIZE, 4);
 
 void send_plover_report_callback(struct k_work *work) {
     struct zmk_hid_plover_report_body report;
@@ -330,10 +351,9 @@ void send_plover_report_callback(struct k_work *work) {
         if (err) {
             LOG_DBG("Error notifying %d", err);
         }
-
         bt_conn_unref(conn);
     }
-};
+}
 
 K_WORK_DEFINE(hog_mouse_work, send_mouse_report_callback);
 
