@@ -326,7 +326,7 @@ void send_mouse_report_callback(struct k_work *work) {
 
 
 K_MSGQ_DEFINE(zmk_hog_plover_msgq, sizeof(struct zmk_hid_plover_report_body),
-              CONFIG_ZMK_BLE_PLOVER_HID_REPORT_QUEUE_SIZE, 4);
+              CONFIG_ZMK_BLE_KEYBOARD_REPORT_QUEUE_SIZE, 4);
 
 void send_plover_report_callback(struct k_work *work) {
     struct zmk_hid_plover_report_body report;
