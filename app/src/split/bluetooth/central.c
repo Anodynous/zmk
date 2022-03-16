@@ -316,7 +316,7 @@ static uint8_t split_central_discovery_func(struct bt_conn *conn, const struct b
     if (err) {
         LOG_ERR("Discover failed (err %d)", err);
     }
-    
+
     LOG_DBG("[ATTRIBUTE] handle %u", attr->handle);
 
     if (!bt_uuid_cmp(discover_params.uuid, BT_UUID_DECLARE_128(ZMK_SPLIT_BT_SERVICE_UUID))) {
@@ -363,27 +363,9 @@ static uint8_t split_central_discovery_func(struct bt_conn *conn, const struct b
 
         split_central_subscribe(conn, &subscribe_params);
 
-    struct peripheral_slot *slot = peripheral_slot_for_conn(conn);
-    if (slot == NULL) {
-        LOG_ERR("No peripheral state found for connection");
         return BT_GATT_ITER_STOP;
     }
 
-    if (bt_uuid_cmp(slot->discover_params.uuid, BT_UUID_DECLARE_128(ZMK_SPLIT_BT_SERVICE_UUID))) {
-        LOG_DBG("Found other service");
-        return BT_GATT_ITER_CONTINUE;
-    }
-
-    LOG_DBG("Found split service");
-    slot->discover_params.uuid = NULL;
-    slot->discover_params.func = split_central_chrc_discovery_func;
-    slot->discover_params.start_handle = attr->handle + 1;
-    slot->discover_params.type = BT_GATT_DISCOVER_CHARACTERISTIC;
-
-    int err = bt_gatt_discover(conn, &slot->discover_params);
-    if (err) {
-        LOG_ERR("Failed to start discovering split service characteristics (err %d)", err);
-    }
     return BT_GATT_ITER_STOP;
 }
 
