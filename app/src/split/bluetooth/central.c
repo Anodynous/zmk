@@ -32,6 +32,12 @@ static int start_scan(void);
 
 #define POSITION_STATE_DATA_LEN 16
 
+static struct bt_conn *default_conn;
+
+static struct bt_uuid_128 uuid = BT_UUID_INIT_128(ZMK_SPLIT_BT_SERVICE_UUID);
+static struct bt_gatt_discover_params discover_params;
+static struct bt_gatt_subscribe_params subscribe_params;
+
 enum peripheral_slot_state {
     PERIPHERAL_SLOT_STATE_OPEN,
     PERIPHERAL_SLOT_STATE_CONNECTING,
