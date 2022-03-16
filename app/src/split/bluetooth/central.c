@@ -380,20 +380,14 @@ static void split_central_process_connection(struct bt_conn *conn) {
         return;
     }
 
-    struct peripheral_slot *slot = peripheral_slot_for_conn(conn);
-    if (slot == NULL) {
-        LOG_ERR("No peripheral state found for connection");
-        return;
-    }
+    if (conn == default_conn && !subscribe_params.value) {
+        discover_params.uuid = &uuid.uuid;
+        discover_params.func = split_central_discovery_func;
+        discover_params.start_handle = 0x0001;
+        discover_params.end_handle = 0xffff;
+        discover_params.type = BT_GATT_DISCOVER_PRIMARY;
 
-    if (!slot->subscribe_params.value_handle) {
-        slot->discover_params.uuid = &split_service_uuid.uuid;
-        slot->discover_params.func = split_central_service_discovery_func;
-        slot->discover_params.start_handle = 0x0001;
-        slot->discover_params.end_handle = 0xffff;
-        slot->discover_params.type = BT_GATT_DISCOVER_PRIMARY;
-
-        err = bt_gatt_discover(slot->conn, &slot->discover_params);
+        err = bt_gatt_discover(default_conn, &discover_params);
         if (err) {
             LOG_ERR("Discover failed(err %d)", err);
             return;
